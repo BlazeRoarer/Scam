@@ -6,92 +6,225 @@
 <title>For Sakhi 💛</title>
 
 <style>
-    body {
-        margin: 0;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        font-family: 'Segoe UI', sans-serif;
-        overflow: hidden;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        /* Sunflower + White Rose Background */
-        background-image: 
-        linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
-        url('https://images.unsplash.com/photo-1501004318641-b39e6451bec6'),
-        url('https://images.unsplash.com/photo-1490750967868-88aa4486c946');
-        
-        background-size: cover;
-        background-blend-mode: lighten;
-        background-position: center;
-    }
+body {
+    height: 100vh;
+    overflow: hidden;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
 
-    h1 {
-        font-size: 40px;
-        text-align: center;
-        color: #d63384;
-        margin-bottom: 40px;
-    }
+    /* YOUR NEW BACKGROUND IMAGE */
+    background-image: url('https://images.pexels.com/photos/26922058/pexels-photo-26922058/free-photo-of-top-view-of-sunflowers.jpeg');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
 
-    .buttons {
-        position: relative;
-    }
 
-    button {
-        padding: 15px 40px;
-        font-size: 20px;
-        border-radius: 30px;
-        border: none;
-        cursor: pointer;
-        margin: 10px;
-        transition: 0.3s;
-    }
+/* Soft white overlay for readability */
+body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.65);
+    z-index: 0;
+}
 
-    #yes {
-        background-color: #ff4da6;
-        color: white;
-    }
+/* WHITE ROSE CENTER IMAGE */
+body::after {
+    content: "";
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background-image: url('https://images.unsplash.com/photo-1561043433-aaf687c4d92d');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.9;
+    z-index: 0;
+}
 
-    #yes:hover {
-        transform: scale(1.1);
-    }
+/* Make content appear above overlays */
+h1, h2, .buttons {
+    position: relative;
+    z-index: 2;
+}
 
-    #no {
-        background-color: #555;
-        color: white;
-        position: absolute;
-    }
+h1 {
+    font-size: 42px;
+    color: #d63384;
+    margin-bottom: 15px;
+}
+
+h2 {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 40px;
+}
+
+.buttons {
+    position: relative;
+}
+
+button {
+    padding: 15px 40px;
+    font-size: 20px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+    transition: 0.3s ease;
+}
+
+#yes {
+    background: linear-gradient(45deg, #ff4da6, #ff85c1);
+    color: white;
+}
+
+#yes:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 20px pink;
+}
+
+#no {
+    background-color: #555;
+    color: white;
+    position: absolute;
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
 </style>
+
 </head>
 
 <body>
 
 <h1>Sakhi? 💛<br>Will you be my Valentine?</h1>
+<h2 id="batLine">Batman will be waiting for you then 🦇</h2>
 
 <div class="buttons">
     <button id="yes" onclick="yesClicked()">Yes 💖</button>
     <button id="no">No 😢</button>
 </div>
 
-<!-- Background Music -->
 <audio autoplay loop>
     <source src="music.mp3" type="audio/mpeg">
 </audio>
 
+<canvas id="confetti"></canvas>
+
 <script>
+/* 🏃 NO BUTTON ESCAPE */
 const noBtn = document.getElementById("no");
 
-noBtn.addEventListener("mouseover", function() {
-    const x = Math.random() * (window.innerWidth - 150);
-    const y = Math.random() * (window.innerHeight - 100);
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
+noBtn.style.position = "absolute";
+noBtn.style.transition = "all 0.3s ease";
+
+document.addEventListener("mousemove", function(e) {
+    const rect = noBtn.getBoundingClientRect();
+    const buttonX = rect.left + rect.width / 2;
+    const buttonY = rect.top + rect.height / 2;
+
+    const distanceX = e.clientX - buttonX;
+    const distanceY = e.clientY - buttonY;
+
+    const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
+    if (distance < 120) {  // sensitivity radius
+        const moveX = -distanceX * 0.6;
+        const moveY = -distanceY * 0.6;
+
+        let newLeft = rect.left + moveX;
+        let newTop = rect.top + moveY;
+
+        // Keep inside screen
+        newLeft = Math.max(0, Math.min(window.innerWidth - rect.width, newLeft));
+        newTop = Math.max(0, Math.min(window.innerHeight - rect.height, newTop));
+
+        noBtn.style.left = newLeft + "px";
+        noBtn.style.top = newTop + "px";
+    }
 });
 
+/* 💖 YES CLICK EVENT */
 function yesClicked() {
-    document.body.innerHTML = "<h1 style='color:#ff1493'>You just made me the happiest person alive 💖🌻</h1>";
+    startConfetti();
+    document.body.innerHTML = `
+        <h1 style="color:#ff1493; animation: fadeIn 2s ease;">
+        You just made me the happiest person alive 💖🌻
+        </h1>
+        <h2 style="margin-top:20px;">
+        Officially my Valentine now 😌✨
+        </h2>
+    `;
 }
+
+/* 🎉 CONFETTI SYSTEM */
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let pieces = [];
+
+function startConfetti() {
+    for (let i = 0; i < 200; i++) {
+        pieces.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height - canvas.height,
+            size: Math.random() * 8 + 4,
+            speed: Math.random() * 3 + 2,
+            color: `hsl(${Math.random()*360}, 100%, 50%)`
+        });
+    }
+    animateConfetti();
+}
+
+function animateConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+        p.y += p.speed;
+        if (p.y > canvas.height) p.y = -10;
+    });
+    requestAnimationFrame(animateConfetti);
+}
+
+/* 💕 FLOATING HEARTS */
+setInterval(() => {
+    const heart = document.createElement("div");
+    heart.innerHTML = "💖";
+    heart.style.position = "absolute";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.top = "100vh";
+    heart.style.fontSize = Math.random() * 20 + 20 + "px";
+    heart.style.animation = "floatUp 4s linear forwards";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 4000);
+}, 800);
+
+const style = document.createElement('style');
+style.innerHTML = `
+@keyframes floatUp {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-120vh); opacity: 0; }
+}`;
+document.head.appendChild(style);
 </script>
 
 </body>
