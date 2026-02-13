@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Sakhi 💛</title>
+
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        font-family: 'Segoe UI', sans-serif;
+        overflow: hidden;
+
+        /* Sunflower + White Rose Background */
+        background-image: 
+        linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
+        url('https://images.unsplash.com/photo-1501004318641-b39e6451bec6'),
+        url('https://images.unsplash.com/photo-1490750967868-88aa4486c946');
+        
+        background-size: cover;
+        background-blend-mode: lighten;
+        background-position: center;
+    }
+
+    h1 {
+        font-size: 40px;
+        text-align: center;
+        color: #d63384;
+        margin-bottom: 40px;
+    }
+
+    .buttons {
+        position: relative;
+    }
+
+    button {
+        padding: 15px 40px;
+        font-size: 20px;
+        border-radius: 30px;
+        border: none;
+        cursor: pointer;
+        margin: 10px;
+        transition: 0.3s;
+    }
+
+    #yes {
+        background-color: #ff4da6;
+        color: white;
+    }
+
+    #yes:hover {
+        transform: scale(1.1);
+    }
+
+    #no {
+        background-color: #555;
+        color: white;
+        position: absolute;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>Sakhi? 💛<br>Will you be my Valentine?</h1>
+
+<div class="buttons">
+    <button id="yes" onclick="yesClicked()">Yes 💖</button>
+    <button id="no">No 😢</button>
+</div>
+
+<!-- Background Music -->
+<audio autoplay loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const noBtn = document.getElementById("no");
+
+noBtn.addEventListener("mouseover", function() {
+    const x = Math.random() * (window.innerWidth - 150);
+    const y = Math.random() * (window.innerHeight - 100);
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+});
+
+function yesClicked() {
+    document.body.innerHTML = "<h1 style='color:#ff1493'>You just made me the happiest person alive 💖🌻</h1>";
+}
+</script>
+
+</body>
+</html>
