@@ -121,13 +121,25 @@ canvas {
     <button id="no">No 😢</button>
 </div>
 
-<audio autoplay loop>
+<audio id="bgMusic" loop>
     <source src="music.mp3" type="audio/mpeg">
 </audio>
+
 
 <canvas id="confetti"></canvas>
 
 <script>
+
+const music = document.getElementById("bgMusic");
+let musicStarted = false;
+
+document.addEventListener("click", function() {
+    if(!musicStarted){
+        music.play();
+        musicStarted = true;
+    }
+});
+
 /* 🏃 NO BUTTON ESCAPE */
 const noBtn = document.getElementById("no");
 
@@ -162,15 +174,20 @@ document.addEventListener("mousemove", function(e) {
 
 /* 💖 YES CLICK EVENT */
 function yesClicked() {
+    music.play();
     startConfetti();
-    document.body.innerHTML = `
-        <h1 style="color:#ff1493; animation: fadeIn 2s ease;">
+     const finalMessage = document.createElement("div");
+    finalMessage.innerHTML = `
+        <h1 style="color:#ff1493; animation: fadeIn 2s ease; margin-top:20px;">
         You just made me the happiest person alive 💖🌻
         </h1>
         <h2 style="margin-top:20px;">
         Officially my Valentine now 😌✨
         </h2>
     `;
+    finalMessage.style.position = "relative";
+    finalMessage.style.zIndex = "2";
+    document.body.appendChild(finalMessage);
 }
 
 /* 🎉 CONFETTI SYSTEM */
